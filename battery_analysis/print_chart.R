@@ -50,28 +50,12 @@ dt <- agg$`log$\`Log date\``
 hl <- round(agg$`log$Health`)
 df <- data.frame(dt, hl)
 
-# bat.health <-
-#   ggplot(df, aes(dt, hl)) +
-#   geom_line() +
-#   ylim(1, 100) +
-#   labs(title = "Battery health", y = "Health %", x = "Date") +
-#   theme_minimal()
-
 # Full Batlife
-
 
 app <- aggregate(log$`Apparent Percentage` ~ log$`Log date`, log, mean)
 ap <- round(app$`log$\`Apparent Percentage\``)
 dp <- app$`log$\`Log date\``
 dd <- data.frame(dp,ap)
-
-# bat.agg <-
-#   bat.agg <-
-#   ggplot(dd, aes(dp, ap)) +
-#   geom_line() +
-#   ylim(1, 100) +
-#   labs(title = "Battery life mean", y = "Battery % Mean", x = "Date") +
-#   theme_minimal()
 
 av.hl <-
   full_join(dd, df, join_by(dp == dt))
@@ -97,9 +81,5 @@ pdf(
 )
 print(bat.life)
 print(bat.av.hl)
-# print(bat.health)
-# print(bat.agg)
-dev.off()
 
-# View(log)
-# View(filter.log)
+dev.off()
