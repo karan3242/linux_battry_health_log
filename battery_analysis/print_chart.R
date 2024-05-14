@@ -10,7 +10,10 @@ graphics.off()
 
 # Load data
 
-source("~/opt/bat_helth_log/battery_analysis/Log_loder.R")
+library(readr)
+log <- read_csv("~/opt/bat_helth_log/log.csv", 
+                col_types = cols(`Log date` = col_date(format = "%m/%d/%y"), 
+                                 `Log time` = col_time(format = "%H:%M:%S")))
 
 # Today Battery percentage
 
