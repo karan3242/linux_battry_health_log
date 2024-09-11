@@ -10,10 +10,7 @@ graphics.off()
 
 # Load data
 
-library(readr)
-log <- read_csv("~/opt/bat_helth_log/log.csv", 
-                col_types = cols(`Log date` = col_date(format = "%m/%d/%y"), 
-                                 `Log time` = col_time(format = "%H:%M:%S")))
+source("~/opt/bat_helth_log/battery_analysis/Log_loder.R")
 
 # Today Battery percentage
 
@@ -34,7 +31,6 @@ bat.life <-
   ggplot(filter.log, aes(`Log time`, aper, col = "Apparent Percentage")) +
   geom_line() +
   geom_line(aes(y = tper, col = "True Percentage")) +
-  geom_hline(yintercept = mean(filter.log$`Apparent Percentage`))+
   labs(y = "Batery Percentage",
        x = NULL,
        title = tit,
@@ -51,12 +47,28 @@ dt <- agg$`log$\`Log date\``
 hl <- round(agg$`log$Health`)
 df <- data.frame(dt, hl)
 
+# bat.health <-
+#   ggplot(df, aes(dt, hl)) +
+#   geom_line() +
+#   ylim(1, 100) +
+#   labs(title = "Battery health", y = "Health %", x = "Date") +
+#   theme_minimal()
+
 # Full Batlife
+
 
 app <- aggregate(log$`Apparent Percentage` ~ log$`Log date`, log, mean)
 ap <- round(app$`log$\`Apparent Percentage\``)
 dp <- app$`log$\`Log date\``
 dd <- data.frame(dp,ap)
+
+# bat.agg <-
+#   bat.agg <-
+#   ggplot(dd, aes(dp, ap)) +
+#   geom_line() +
+#   ylim(1, 100) +
+#   labs(title = "Battery life mean", y = "Battery % Mean", x = "Date") +
+#   theme_minimal()
 
 av.hl <-
   full_join(dd, df, join_by(dp == dt))
@@ -66,8 +78,7 @@ bat.av.hl <-
   geom_smooth(method = 'loess', se = TRUE, formula = "y~x")+
   geom_line()+
   geom_line(aes(y = hl, col = "Health")) +
-  geom_hline(yintercept = 80,)+
-  geom_hline(yintercept = round(mean(av.hl$hl)), color = 'red')+
+  geom_hline(yintercept = 80)+
   ylim(0, 100) +
   labs(title = "Battery life", y = "Battery %", x = NULL,
        colour = "Battery stats") +
@@ -83,5 +94,9 @@ pdf(
 )
 print(bat.life)
 print(bat.av.hl)
-
+# print(bat.health)
+# print(bat.agg)
 dev.off()
+
+# View(log)
+# View(filter.log)
