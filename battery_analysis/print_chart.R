@@ -61,7 +61,7 @@ dd <- data.frame(dp,ap)
 av.hl <-
   full_join(dd, df, join_by(dp == dt))
 
-cycle <- read_lines("cycle_count")
+cycle <- read_lines("/home/kd/opt/bat_helth_log/battery_analysis/cycle_count")
 
 bat.av.hl <-
   ggplot(av.hl, aes(dp, ap, col = "Avrage Battery Life")) +
