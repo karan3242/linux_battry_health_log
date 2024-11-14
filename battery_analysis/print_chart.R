@@ -65,10 +65,10 @@ cycle <- read_lines("/home/kd/opt/bat_helth_log/battery_analysis/cycle_count")
 
 bat.av.hl <-
   ggplot(av.hl, aes(dp, ap, col = "Avrage Battery Life")) +
-  geom_hline(yintercept = round(mean(av.hl$hl))) +
+  geom_hline(yintercept = mean(av.hl$hl)) +
   geom_hline(yintercept = max(av.hl$hl), color = 'green') +
   geom_hline(yintercept = min(av.hl$hl), color = 'red') +
-  geom_hline(yintercept = round(mean(tail(av.hl$hl, n = 30))), color = 'blue') +
+  geom_hline(yintercept = mean(tail(av.hl$hl, n = 30)), color = 'blue') +
   geom_line(aes(y = hl, col = "Health")) +
     labs(title = paste("Battery life - Cycles:",cycle ), y = "Battery %", x = NULL,
        colour = "Battery stats") +
