@@ -11,8 +11,8 @@ graphics.off()
 # Load data
 
 library(readr)
-log <- read_csv("~/opt/bat_helth_log/log.csv", 
-                col_types = cols(`Log date` = col_date(format = "%m/%d/%y"), 
+log <- read_csv("~/opt/bat_helth_log/log.csv",
+                col_types = cols(`Log date` = col_date(format = "%m/%d/%y"),
                                  `Log time` = col_time(format = "%H:%M:%S")))
 
 # Today Battery percentage
@@ -61,15 +61,16 @@ dd <- data.frame(dp,ap)
 av.hl <-
   full_join(dd, df, join_by(dp == dt))
 
+cycle <- read_lines("cycle_count")
+
 bat.av.hl <-
   ggplot(av.hl, aes(dp, ap, col = "Avrage Battery Life")) +
-  geom_smooth(method = 'loess', se = TRUE, formula = "y~x")+
-  geom_line()+
+  geom_hline(yintercept = round(mean(av.hl$hl))) +
+  geom_hline(yintercept = max(av.hl$hl), color = 'green') +
+  geom_hline(yintercept = min(av.hl$hl), color = 'red') +
+  geom_hline(yintercept = round(mean(tail(av.hl$hl, n = 30))), color = 'blue') +
   geom_line(aes(y = hl, col = "Health")) +
-  geom_hline(yintercept = 80,)+
-  geom_hline(yintercept = round(mean(av.hl$hl)), color = 'red')+
-  ylim(0, 100) +
-  labs(title = "Battery life", y = "Battery %", x = NULL,
+    labs(title = paste("Battery life - Cycles:",cycle ), y = "Battery %", x = NULL,
        colour = "Battery stats") +
   theme_minimal() +
   theme(legend.position = "top")

@@ -19,4 +19,4 @@ truecap(){
 day=$(date "+%D")
 time=$(date "+%T")
 
-echo "$day,$time,$(div),$(truecap),$bat" >> /home/kd/opt/bat_helth_log/log.csv
+echo "$day,$time,$(div),$(truecap),$bat" >> ~/opt/bat_helth_log/log.csv
