@@ -48,13 +48,13 @@ bat.life <-
 
 agg <- aggregate(log$Health ~ log$`Log date`, log, mean)
 dt <- agg$`log$\`Log date\``
-hl <- round(agg$`log$Health`)
+hl <- agg$`log$Health`
 df <- data.frame(dt, hl)
 
 # Full Batlife
 
 app <- aggregate(log$`Apparent Percentage` ~ log$`Log date`, log, mean)
-ap <- round(app$`log$\`Apparent Percentage\``)
+ap <- app$`log$\`Apparent Percentage\``
 dp <- app$`log$\`Log date\``
 dd <- data.frame(dp,ap)
 
