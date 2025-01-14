@@ -35,11 +35,11 @@ bat.life <-
   geom_line() +
   geom_line(aes(y = tper, col = "True Percentage")) +
   geom_hline(yintercept = mean(filter.log$`Apparent Percentage`))+
+  scale_x_time(limits = as_datetime(c("00:00:00", "23:59:59"))) +
   labs(y = "Batery Percentage",
        x = NULL,
        title = tit,
        colour = NULL) +
-  ylim(0, 100) +
   theme_minimal() +
   theme(legend.position = "top")
 
