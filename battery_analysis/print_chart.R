@@ -1,16 +1,11 @@
 #package
-
-library(tidyverse)
-library(tune)
-
-# Remove Variables
-
-rm(list = ls())
-graphics.off()
+tic()
+pkg <- c("tidyverse", "tune", "readr")
+lapply(pkg, library, character.only = TRUE)
+theme_set(theme_minimal())
 
 # Load data
 
-library(readr)
 log <- read_csv("~/opt/bat_helth_log/log.csv",
                 col_types = cols(`Log date` = col_date(format = "%m/%d/%y"),
                                  `Log time` = col_time(format = "%H:%M:%S")))
@@ -23,26 +18,38 @@ filter.log <-
 health <- filter.log$Health
 tper <- filter.log$`True Percentage`
 aper <- filter.log$`Apparent Percentage`
-start.date <- today() |> floor_date(unit = "year") |> as.Date()
-end.date <- today() |> ceiling_date(unit = "year") |> as.Date() -1
+start.date <- today()  %>%  floor_date(unit = "year")  %>%  as.Date()
+end.date <- today()  %>%  ceiling_date(unit = "year")  %>%  as.Date() -1
 
 # Battery plot
 tit <-
-  paste0("Battery Percantage: ",
+  paste0("Battery %: ",
          date())
 bat.life <-
-  ggplot(filter.log, aes(`Log time`, aper, col = "Apparent Percentage")) +
+  ggplot(filter.log, aes(`Log time`, aper, col = "Apparent %")) +
   geom_line() +
-  geom_line(aes(y = tper, col = "True Percentage")) +
+  geom_line(aes(y = tper, col = "True %")) +
   geom_hline(yintercept = mean(filter.log$`Apparent Percentage`))+
   scale_x_time(limits = as_datetime(c("00:00:00", "23:59:59"))) +
+  ylim(0,100) +
   labs(y = "Batery Percentage",
        x = NULL,
        title = tit,
        colour = NULL) +
-  theme_minimal() +
   theme(legend.position = "top")
 
+# Rate of Change Chart
+
+rate_of_change <- filter.log %>% 
+  mutate(Lag = lag(filter.log$`Apparent Percentage`),
+         Lead = lead(filter.log$`Apparent Percentage`),
+         ChangePercentage  = (filter.log$`Apparent Percentage`- Lag))
+
+change_chart <- ggplot(rate_of_change, aes(`Log time`, ChangePercentage)) +
+  geom_line() + 
+  labs(title = "Change points",
+       x = element_blank(),
+       y = element_blank())
 
 # Time series plot of the Battery health
 
@@ -69,11 +76,9 @@ bat.av.hl <-
   geom_hline(yintercept = max(av.hl$hl), color = 'green') +
   geom_hline(yintercept = min(av.hl$hl), color = 'red') +
   geom_hline(yintercept = mean(tail(av.hl$hl, n = 30)), color = 'blue') +
-  geom_line(aes(y = hl, col = "Health")) +
+  geom_line(aes(y = hl, col = "Health"), show.legend = FALSE) +
     labs(title = paste("Battery life - Cycles:",cycle ), y = "Battery %", x = NULL,
-       colour = "Battery stats") +
-  theme_minimal() +
-  theme(legend.position = "top")
+       colour = "Battery stats")
 
 ## Logs
 pdf(
@@ -83,6 +88,8 @@ pdf(
   paper = "a4r"
 )
 print(bat.life)
+print(change_chart)
 print(bat.av.hl)
 
 dev.off()
+toc()
