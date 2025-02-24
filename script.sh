@@ -8,10 +8,6 @@ div(){
 	echo "scale=3; ($now / $full) * 100" | bc
 }
 
-maxcap(){
-	echo "scale=3; $(div) * .8" | bc
-}
-
 truecap(){
 	echo "scale=3; ($bat * $(div)) / 100" | bc
 }

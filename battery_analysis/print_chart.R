@@ -32,10 +32,11 @@ tit <-
          date())
 bat.life <-
   ggplot(filter.log, aes(`Log time`, aper, col = "Apparent Percentage")) +
-  geom_line() +
+  geom_point() +
   geom_line(aes(y = tper, col = "True Percentage")) +
   geom_hline(yintercept = mean(filter.log$`Apparent Percentage`))+
   scale_x_time(limits = as_datetime(c("00:00:00", "23:59:59"))) +
+  ylim(0,100) +
   labs(y = "Batery Percentage",
        x = NULL,
        title = tit,
@@ -43,6 +44,19 @@ bat.life <-
   theme_minimal() +
   theme(legend.position = "top")
 
+# Rate of Change Chart
+
+rate_of_change <- filter.log %>% 
+  mutate(Lag = lag(filter.log$`Apparent Percentage`),
+         Lead = lead(filter.log$`Apparent Percentage`),
+         ChangePercentage  = (filter.log$`Apparent Percentage`- Lag))
+
+change_chart <- ggplot(rate_of_change, aes(`Log time`, ChangePercentage)) +
+  geom_line() + 
+  theme_minimal() +
+  labs(title = "Change points",
+       x = element_blank(),
+       y = element_blank())
 
 # Time series plot of the Battery health
 
@@ -83,6 +97,7 @@ pdf(
   paper = "a4r"
 )
 print(bat.life)
+print(change_chart)
 print(bat.av.hl)
 
 dev.off()
