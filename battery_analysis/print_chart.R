@@ -26,9 +26,15 @@ tit <-
   paste0("Battery %: ",
          date())
 bat.life <-
+<<<<<<< HEAD
   ggplot(filter.log, aes(`Log time`, aper, col = "Apparent %")) +
   geom_line() +
   geom_line(aes(y = tper, col = "True %")) +
+=======
+  ggplot(filter.log, aes(`Log time`, aper, col = "Apparent Percentage")) +
+  geom_point() +
+  geom_line(aes(y = tper, col = "True Percentage")) +
+>>>>>>> origin/main
   geom_hline(yintercept = mean(filter.log$`Apparent Percentage`))+
   scale_x_time(limits = as_datetime(c("00:00:00", "23:59:59"))) +
   ylim(0,100) +
@@ -47,6 +53,10 @@ rate_of_change <- filter.log %>%
 
 change_chart <- ggplot(rate_of_change, aes(`Log time`, ChangePercentage)) +
   geom_line() + 
+<<<<<<< HEAD
+=======
+  theme_minimal() +
+>>>>>>> origin/main
   labs(title = "Change points",
        x = element_blank(),
        y = element_blank())
